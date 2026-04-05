@@ -1,0 +1,31 @@
+<section class="shell">
+  <div class="shell__content">
+    <p class="eyebrow">Nx monorepo starter</p>
+    <h1>Base Project</h1>
+    <p class="lede">
+      Angular, Spring Boot, Gradle, Codex skills, and MCP are wired with a
+      minimal but production-minded starting structure.
+    </p>
+
+    <div class="pillars">
+      @for (pillar of pillars; track pillar.title) {
+      <article class="pillar-card">
+        <h2>{{ pillar.title }}</h2>
+        <p>{{ pillar.detail }}</p>
+      </article>
+      }
+    </div>
+  </div>
+
+  <aside class="ops-card" aria-label="Starter commands">
+    <p class="ops-card__label">First commands</p>
+    <ul class="command-list">
+      @for (item of commands; track item.command) {
+      <li>
+        <span>{{ item.label }}</span>
+        <code>{{ item.command }}</code>
+      </li>
+      }
+    </ul>
+  </aside>
+</section>

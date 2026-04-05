@@ -1,0 +1,7 @@
+interface:
+  display_name: "Backend Programming Standards"
+  short_description: "Backend coding standards for reliability and consistency"
+  brand_color: "#264653"
+  default_prompt: "Use $backend-programming-standards to apply backend naming, validation, error, and test standards."
+policy:
+  allow_implicit_invocation: true

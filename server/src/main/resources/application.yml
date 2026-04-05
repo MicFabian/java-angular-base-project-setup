@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: base-project-api
+  datasource:
+    url: jdbc:postgresql://${APP_DB_HOST:localhost}:${APP_DB_PORT:5432}/${APP_DB_NAME:base_project}
+    username: ${APP_DB_USERNAME:base_project}
+    password: ${APP_DB_PASSWORD:base_project}
+    driver-class-name: org.postgresql.Driver
+  docker:
+    compose:
+      enabled: true
+      file: docker/compose.yaml
+
+app:
+  version: 0.1.0-SNAPSHOT
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html

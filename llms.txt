@@ -1,0 +1,41 @@
+# Base Project LLM Guide
+
+This repository is a reusable Angular + Spring Boot starter optimized for coding agents.
+
+## Canonical Instructions
+
+1. Root guidance: `AGENTS.md`
+2. Frontend scope guidance: `client/AGENTS.md`
+3. Backend scope guidance: `server/AGENTS.md`
+
+Nearest-scope instructions win over broader instructions.
+
+## Stack Baseline
+
+- Angular `21.2.x` + Nx `22.x` (`client`, `client-e2e`)
+- Node.js `22.15.x` for frontend tooling and builds
+- Spring Boot `4.0.4` + Gradle + Java toolchain `21` (`server`)
+- Spock/Groovy test structure in `server/src/test/groovy`
+- PostgreSQL local runtime via `docker/compose.yaml`
+
+## Architecture Constraints
+
+- Backend uses clean architecture by feature.
+- Infrastructure communication must go through Ports/Adapters.
+- Avoid generic multi-purpose `*Service` classes.
+- Keep use cases single-purpose.
+- Create/update ADRs for architecture-impacting decisions.
+
+## Skill System
+
+- Skills live in `.agents/skills`.
+- Validate skills with `pnpm run skills:verify`.
+- Refresh external skills with `pnpm run skills:update`.
+- Skill structure reference: `docs/ai/skills-structure.md`.
+
+## Validation Commands
+
+- Frontend: `pnpm nx build client`, `pnpm nx test client`, `pnpm nx e2e client-e2e`
+- Backend: `./gradlew :server:test`, `./gradlew :server:build`
+- Architecture: `pnpm run test:server:architecture`
+- Full: `pnpm run verify` or `pnpm run verify:e2e`

@@ -1,0 +1,9 @@
+/dist
+/coverage
+/.gradle
+/.nx/cache
+/.nx/workspace-data
+/angular
+/apps/api/build
+/build
+/gradle/wrapper/gradle-wrapper.jar

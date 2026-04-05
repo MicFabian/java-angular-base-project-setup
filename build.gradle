@@ -1,0 +1,27 @@
+import org.gradle.api.tasks.testing.Test
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
+plugins {
+    id 'base'
+}
+
+group = 'com.example.baseproject'
+version = '0.1.0-SNAPSHOT'
+
+allprojects {
+    group = rootProject.group
+    version = rootProject.version
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+        testLogging {
+            events TestLogEvent.PASSED, TestLogEvent.SKIPPED, TestLogEvent.FAILED
+        }
+    }
+}

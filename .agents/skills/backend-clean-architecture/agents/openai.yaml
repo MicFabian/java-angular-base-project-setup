@@ -1,0 +1,7 @@
+interface:
+  display_name: "Backend Clean Architecture"
+  short_description: "Enforce backend layer boundaries and dependency direction"
+  brand_color: "#2F6B45"
+  default_prompt: "Use $backend-clean-architecture to shape this backend change with strict dependency direction."
+policy:
+  allow_implicit_invocation: true

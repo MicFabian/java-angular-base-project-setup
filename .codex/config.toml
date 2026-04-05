@@ -1,0 +1,31 @@
+[mcp_servers.nx_mcp]
+command = "npx"
+args = ["nx", "mcp"]
+required = false
+
+[mcp_servers.angular_cli]
+command = "npx"
+args = ["-y", "@angular/cli", "mcp", "--read-only"]
+enabled_tools = ["get_best_practices", "find_examples", "search_documentation", "list_projects"]
+startup_timeout_sec = 20
+tool_timeout_sec = 120
+required = false
+
+[mcp_servers.openai_developer_docs]
+url = "https://developers.openai.com/mcp"
+startup_timeout_sec = 20
+tool_timeout_sec = 120
+required = false
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["-y", "@playwright/mcp@latest"]
+startup_timeout_sec = 20
+tool_timeout_sec = 180
+required = false
+
+features.multi_agent = true
+
+[agents.ci-monitor-subagent]
+description = "CI helper for /monitor-ci. Fetches CI status, retrieves fix details, or updates self-healing fixes. Executes one MCP tool call and returns the result."
+config_file = "agents/ci-monitor-subagent.toml"
