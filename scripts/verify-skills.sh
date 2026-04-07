@@ -169,7 +169,7 @@ if (fs.existsSync(lockFile)) {
     errors.push(`Failed to parse skills-lock.json: ${error.message}`);
   }
 } else {
-  warnings.push("skills-lock.json not found; external-skill updates are not reproducible.");
+  warnings.push("skills-lock.json not found; project-scoped npx skills restore is not reproducible.");
 }
 
 if (warnings.length > 0) {

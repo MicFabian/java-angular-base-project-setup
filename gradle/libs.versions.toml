@@ -2,16 +2,25 @@
 spring-boot = "4.0.4"
 spock = "2.4-groovy-5.0"
 springdoc = "3.0.2"
+snappo = "1.0.6"
+spotless = "8.4.0"
+palantir-java-format = "2.90.0"
 
 [libraries]
 spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator" }
+spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
 spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation" }
 spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web" }
 spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test" }
+flyway-postgresql = { module = "org.flywaydb:flyway-database-postgresql" }
+flyway-core = { module = "org.flywaydb:flyway-core" }
 springdoc-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
 spock-bom = { module = "org.spockframework:spock-bom", version.ref = "spock" }
 spock-core = { module = "org.spockframework:spock-core" }
 spock-spring = { module = "org.spockframework:spock-spring" }
+snappo = { module = "io.github.micfabian:snappo", version.ref = "snappo" }
+testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version = "2.0.2" }
 
 [plugins]
 spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }

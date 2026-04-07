@@ -1,5 +1,5 @@
 version: 1
 interface:
-  display_name: "Write ADR"
-  short_description: "Create or update architecture decision records in ADR/."
-  default_prompt: "Use $write-adr to draft or update a high-quality ADR in ADR/ with clear context, decision, alternatives, and consequences."
+  display_name: 'Write ADR'
+  short_description: 'Create or update architecture decision records in ADR/.'
+  default_prompt: 'Use $write-adr to draft or update a high-quality ADR in ADR/ with clear context, decision, alternatives, and consequences.'

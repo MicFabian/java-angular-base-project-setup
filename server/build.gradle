@@ -1,11 +1,27 @@
+import org.gradle.api.artifacts.VersionCatalogsExtension
+
 plugins {
     alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spotless)
     id 'groovy'
 }
+
+def libsCatalog = extensions.getByType(VersionCatalogsExtension).named('libs')
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+spotless {
+    encoding = 'UTF-8'
+    lineEndings = 'UNIX'
+
+    java {
+        target 'src/**/*.java'
+        palantirJavaFormat(libsCatalog.findVersion('palantir-java-format').get().requiredVersion)
+        formatAnnotations()
     }
 }
 
@@ -17,14 +33,62 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation libs.flyway.core
+    implementation libs.flyway.postgresql
     implementation libs.springdoc.webmvc.ui
     runtimeOnly 'org.postgresql:postgresql'
 
     testImplementation platform(libs.spock.bom)
+    testImplementation libs.snappo
+    testImplementation libs.spring.boot.testcontainers
     testImplementation libs.spock.core
     testImplementation libs.spock.spring
+    testImplementation libs.testcontainers.postgresql
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.mockito'
+    }
+    testImplementation('org.springframework.boot:spring-boot-starter-webmvc-test') {
+        exclude group: 'org.mockito'
+    }
     testRuntimeOnly 'com.h2database:h2'
+}
+
+tasks.named('test') {
+    systemProperty 'spring.profiles.active', 'test'
+
+    filter {
+        excludeTestsMatching '*IntegrationSpec'
+    }
+}
+
+tasks.register('updateSnapshots', Test) {
+    description = 'Runs fast backend tests with Snappo snapshot update mode enabled.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    systemProperty 'spring.profiles.active', 'test'
+    systemProperty 'snappo.snapshot.update', 'true'
+
+    filter {
+        excludeTestsMatching '*IntegrationSpec'
+    }
+
+    outputs.upToDateWhen { false }
+    shouldRunAfter(tasks.named('test'))
+}
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs backend integration tests that require external infrastructure.'
+    group = 'verification'
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    filter {
+        includeTestsMatching '*IntegrationSpec'
+    }
+
+    systemProperty 'spring.profiles.active', 'integration-test'
+    shouldRunAfter(tasks.named('test'))
 }

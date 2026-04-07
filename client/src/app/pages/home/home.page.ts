@@ -38,11 +38,18 @@ export class HomePageComponent {
   ];
 
   protected readonly commands: StarterCommand[] = [
-    { label: 'Frontend dev server', command: 'pnpm nx serve client' },
+    {
+      label: 'Personalize starter',
+      command:
+        'pnpm run personalize -- --project-name orders-platform --display-name "Orders Platform" --java-base-package com.acme.orders',
+    },
+    { label: 'Bootstrap workspace', command: 'pnpm run setup:db' },
     { label: 'Project verification', command: 'pnpm run verify' },
-    { label: 'Frontend unit tests', command: 'pnpm nx test client' },
-    { label: 'Backend tests', command: './gradlew :server:test' },
-    { label: 'Architecture tests', command: 'pnpm run test:server:architecture' },
+    { label: 'Frontend dev server', command: 'pnpm nx serve client' },
     { label: 'Backend runtime', command: './gradlew :server:bootRun' },
+    {
+      label: 'Backend feature scaffold',
+      command: 'pnpm run scaffold:backend-feature -- billing',
+    },
   ];
 }

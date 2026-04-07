@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=./lib/starter.sh
+source "$SCRIPT_DIR/lib/starter.sh"
+
 if [[ $# -ne 1 ]]; then
   echo "Usage: $0 <feature-name>"
   echo "Example: $0 billing"
   exit 1
 fi
+
+load_starter_config
 
 RAW_FEATURE="$1"
 FEATURE="$(echo "$RAW_FEATURE" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/_/g; s/^_+|_+$//g')"
@@ -20,8 +26,10 @@ if [[ ! "$FEATURE" =~ ^[a-z][a-z0-9_]*$ ]]; then
   exit 1
 fi
 
-MAIN_BASE="server/src/main/java/com/example/baseproject/api/features/$FEATURE"
-TEST_BASE="server/src/test/groovy/com/example/baseproject/api/features/$FEATURE"
+PACKAGE_PATH="$(package_to_path "$STARTER_JAVA_BASE_PACKAGE")"
+MAIN_BASE="server/src/main/java/$PACKAGE_PATH/api/features/$FEATURE"
+TEST_BASE="server/src/test/groovy/$PACKAGE_PATH/api/features/$FEATURE"
+FEATURE_TITLE="$(derive_display_name "$FEATURE")"
 
 if [[ -d "$MAIN_BASE" ]]; then
   echo "Feature '$FEATURE' already exists at $MAIN_BASE"
@@ -59,7 +67,7 @@ for dir in "${TEST_DIRS[@]}"; do
 done
 
 cat > "$MAIN_BASE/README.md" <<EOF
-# ${FEATURE^} Feature
+# $FEATURE_TITLE Feature
 
 Clean architecture structure:
 - domain: entities, value objects, domain rules

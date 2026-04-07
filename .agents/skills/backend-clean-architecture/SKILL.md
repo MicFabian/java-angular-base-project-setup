@@ -28,6 +28,7 @@ Apply this skill for backend design and refactors in `server`.
 8. Keep transaction boundaries in use cases, not in controllers or adapters.
 9. ADR check: if the change introduces or alters architectural decisions, create or update an ADR in `ADR/` using `write-adr`.
 10. Validate after structural changes with:
-   - `pnpm run test:server:architecture`
-   - `./gradlew :server:test`
-   - `./gradlew :server:build`
+
+- `pnpm run test:server:architecture`
+- `./gradlew :server:test`
+- `./gradlew :server:build`

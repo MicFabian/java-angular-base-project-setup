@@ -13,6 +13,8 @@ description: Use when a change touches both Angular and Spring Boot, or when a t
    - `pnpm nx test client`
    - `pnpm run test:server:architecture`
    - `./gradlew :server:test`
+   - `./gradlew :server:updateSnapshots` when intentional backend snapshot changes need to be recorded
+   - `./gradlew :server:integrationTest` when infrastructure behavior changes
 5. ADR check: if architectural direction, platform boundaries, or core workflow assumptions change, create/update an ADR in `ADR/` using `write-adr`.
-6. Before finishing broad changes, run `pnpm run verify` to confirm the full baseline health check.
+6. Before finishing broad changes, run `pnpm run verify` for the fast baseline and `pnpm run verify:ci` when the change touches infrastructure-backed backend behavior.
 7. If a task requires repo guidance, read `AGENTS.md` before making structural changes.

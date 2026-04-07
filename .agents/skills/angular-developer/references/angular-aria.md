@@ -146,7 +146,9 @@ These patterns combine `ngCombobox` with a popup containing an `ngListbox`.
 ```html
 <!-- Example: Standard Select -->
 <div ngCombobox [readonly]="true">
-  <button ngComboboxInput class="select-trigger">{{ selectedValue() || 'Choose an option' }}</button>
+  <button ngComboboxInput class="select-trigger">
+    {{ selectedValue() || 'Choose an option' }}
+  </button>
 
   <ng-template ngComboboxPopupContainer>
     <ul ngListbox [(values)]="selectedValue" class="dropdown-menu">

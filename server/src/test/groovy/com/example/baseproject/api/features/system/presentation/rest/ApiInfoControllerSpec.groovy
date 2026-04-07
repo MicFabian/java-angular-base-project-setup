@@ -2,6 +2,8 @@ package com.example.baseproject.api.features.system.presentation.rest
 
 import com.example.baseproject.api.features.system.application.port.in.GetApiInfoUseCase
 import com.example.baseproject.api.features.system.domain.ApiInfo
+import io.github.micfabian.snappo.Comparisons
+import io.github.micfabian.snappo.Snappo
 import org.spockframework.spring.SpringBean
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
@@ -19,17 +21,28 @@ class ApiInfoControllerSpec extends Specification {
     MockMvc mvc
 
     @SpringBean
-    GetApiInfoUseCase getApiInfoUseCase = Mock()
+    GetApiInfoUseCase getApiInfoUseCase = Stub() {
+        execute() >> new ApiInfo('base-project-api', '0.1.0-SNAPSHOT', 'UP')
+    }
 
-    def 'returns service metadata'() {
-        given:
-        getApiInfoUseCase.execute() >> new ApiInfo('base-project-api', '0.1.0-SNAPSHOT', 'UP')
-
+    def 'returns API metadata from the use case'() {
         expect:
         mvc.perform(get('/api/info'))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath('$.name').value('base-project-api'))
                 .andExpect(jsonPath('$.version').value('0.1.0-SNAPSHOT'))
                 .andExpect(jsonPath('$.status').value('UP'))
+    }
+
+    def 'matches the response snapshot'() {
+        when:
+        def response = mvc.perform(get('/api/info'))
+                .andExpect(status().isOk())
+                .andReturn()
+                .response
+                .contentAsString
+
+        then:
+        Snappo.expect(response, Comparisons.JSON)
     }
 }

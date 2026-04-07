@@ -18,8 +18,10 @@ Applies to `client`, `client-e2e`, and frontend-facing libraries in `libs/web/*`
 3. Use Angular standalone APIs and signals-first patterns for new code.
 4. Keep component logic thin and push non-trivial business orchestration to backend use cases.
 5. If an API contract changes, update frontend consumers in the same turn and align with `server`.
-6. Run `pnpm nx build client` after non-trivial generation/refactors.
-7. If structural or architectural frontend direction changes, create/update an ADR in `ADR/` via `write-adr`.
+6. For route-level tests, prefer `RouterTestingHarness` over manual router plumbing.
+7. Run `pnpm nx build client` after non-trivial generation/refactors.
+8. Use Prettier through `pnpm run format:frontend` or `pnpm run format`.
+9. If structural or architectural frontend direction changes, create/update an ADR in `ADR/` via `write-adr`.
 
 ## Validation
 

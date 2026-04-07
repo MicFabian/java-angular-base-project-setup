@@ -7,6 +7,7 @@ This repository is a reusable Angular + Spring Boot starter optimized for coding
 1. Root guidance: `AGENTS.md`
 2. Frontend scope guidance: `client/AGENTS.md`
 3. Backend scope guidance: `server/AGENTS.md`
+4. Starter identity: `.starter/project-metadata.env`
 
 Nearest-scope instructions win over broader instructions.
 
@@ -15,7 +16,9 @@ Nearest-scope instructions win over broader instructions.
 - Angular `21.2.x` + Nx `22.x` (`client`, `client-e2e`)
 - Node.js `22.15.x` for frontend tooling and builds
 - Spring Boot `4.0.4` + Gradle + Java toolchain `21` (`server`)
+- Flyway migrations and dedicated Testcontainers-backed integration tests for the backend
 - Spock/Groovy test structure in `server/src/test/groovy`
+- Snappo snapshot testing for committed backend snapshots
 - PostgreSQL local runtime via `docker/compose.yaml`
 
 ## Architecture Constraints
@@ -29,13 +32,22 @@ Nearest-scope instructions win over broader instructions.
 ## Skill System
 
 - Skills live in `.agents/skills`.
+- Angular workflow skills come from `angular/skills`.
+- Nx workflow skills come from `nrwl/nx-ai-agents-config`.
 - Validate skills with `pnpm run skills:verify`.
-- Refresh external skills with `pnpm run skills:update`.
+- Discover external skills with `pnpm run skills:find -- <query>`.
+- Add or refresh project-scoped external skills with `pnpm run skills:add -- <source>`.
+- Restore the committed project skill set with `pnpm run skills:restore`.
 - Skill structure reference: `docs/ai/skills-structure.md`.
 
 ## Validation Commands
 
+- Doctor: `pnpm run doctor`, `pnpm run doctor:db`
+- Starter bootstrap: `pnpm run setup`, `pnpm run setup:db`
+- Starter personalization: `pnpm run personalize -- --project-name <name> --java-base-package <package>`
+- Formatting: `pnpm run format`, `pnpm run format:check`, `pnpm run format:backend`
 - Frontend: `pnpm nx build client`, `pnpm nx test client`, `pnpm nx e2e client-e2e`
 - Backend: `./gradlew :server:test`, `./gradlew :server:build`
+- Backend integration: `./gradlew :server:integrationTest`
 - Architecture: `pnpm run test:server:architecture`
-- Full: `pnpm run verify` or `pnpm run verify:e2e`
+- Full: `pnpm run verify`, `pnpm run verify:e2e`, or `pnpm run verify:ci`

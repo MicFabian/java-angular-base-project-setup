@@ -11,6 +11,9 @@ fi
 echo "Verifying skills..."
 ./scripts/verify-skills.sh
 
+echo "Checking formatting..."
+./scripts/pnpmw.sh run format:check
+
 echo "Running frontend lint..."
 ./scripts/pnpmw.sh nx run-many -t lint --projects=client,client-e2e
 
@@ -21,10 +24,10 @@ echo "Building frontend..."
 ./scripts/pnpmw.sh nx build client
 
 echo "Running backend tests..."
-./gradlew :server:test
+./scripts/gradlew-local.sh :server:test
 
 echo "Building backend..."
-./gradlew :server:build
+./scripts/gradlew-local.sh :server:build
 
 if [[ "$WITH_E2E" == "true" ]]; then
   echo "Running frontend e2e..."

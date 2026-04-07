@@ -6,6 +6,8 @@ spring:
     username: ${APP_DB_USERNAME:base_project}
     password: ${APP_DB_PASSWORD:base_project}
     driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
   docker:
     compose:
       enabled: true
@@ -14,14 +16,26 @@ spring:
 app:
   version: 0.1.0-SNAPSHOT
 
+info:
+  app:
+    name: ${spring.application.name}
+    version: ${app.version}
+
 management:
   endpoints:
+    access:
+      max-permitted: read-only
     web:
       exposure:
-        include: health,info
-
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /swagger-ui.html
+        include:
+          - health
+          - info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+    info:
+      access: read-only
+  info:
+    env:
+      enabled: true

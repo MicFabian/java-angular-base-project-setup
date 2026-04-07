@@ -1,7 +1,7 @@
 interface:
-  display_name: "Spring Boot API"
-  short_description: "Repo-specific backend rules for server"
-  brand_color: "#2F6B45"
-  default_prompt: "Use $spring-boot-api to implement this server backend change with Spring Boot conventions."
+  display_name: 'Spring Boot API'
+  short_description: 'Repo-specific backend rules for server'
+  brand_color: '#2F6B45'
+  default_prompt: 'Use $spring-boot-api to implement this server backend change with Spring Boot conventions.'
 policy:
   allow_implicit_invocation: true

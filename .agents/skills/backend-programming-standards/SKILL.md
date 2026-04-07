@@ -24,16 +24,22 @@ Apply these standards to all backend work in `server`.
    - Keep queries/adapters in infrastructure classes.
    - Access infrastructure only through ports from the application layer.
    - Keep transactional orchestration in the application/use-case layer.
+   - Apply database changes through Flyway migrations, not ad hoc startup SQL.
 6. Security defaults:
    - Explicitly validate access assumptions.
    - Sanitize and constrain external input before use.
 7. Testing standards:
+   - Use Spock/Groovy for backend tests.
    - Unit/slice tests for business rules and adapters.
    - Prefer deterministic tests; mock only external boundaries.
+   - Use Snappo for committed response or contract snapshots instead of hand-rolled snapshot helpers.
+   - Use dedicated Testcontainers-backed integration tests when behavior depends on the real database or other infrastructure.
 8. ADR check:
    - If structure, architecture, or major technical direction changes, update/create an ADR in `ADR/` with `write-adr`.
 
 Minimum verification for non-trivial backend changes:
+
 - `pnpm run test:server:architecture`
 - `./gradlew :server:test`
+- `./gradlew :server:integrationTest` when database or infrastructure behavior changes
 - `./gradlew :server:build`

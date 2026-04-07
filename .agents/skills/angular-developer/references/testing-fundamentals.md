@@ -16,8 +16,8 @@ This project follows a modern, zoneless testing approach. State changes schedule
 ### Basic Test Structure Example
 
 ```ts
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MyComponent } from './my.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {MyComponent} from './my.component';
 
 describe('MyComponent', () => {
   let component: MyComponent;
@@ -64,12 +64,3 @@ describe('MyComponent', () => {
   - `fixture.componentInstance`: Access the component's class instance.
   - `fixture.nativeElement`: Access the component's root DOM element.
   - `fixture.debugElement`: An Angular-specific wrapper around the `nativeElement` that provides safer, platform-agnostic ways to query the DOM (e.g., `debugElement.query(By.css('p'))`).
-
-## Custom Utilities
-
-To keep tests fast and avoid long waits, this project provides custom utilities:
-
-- **`useAutoTick()`**: (from `packages/private/testing/src/utils.ts`) Fast-forwards time via a mock clock to avoid real waits.
-- **`await timeout(ms)`**: (from `packages/private/testing/src/utils.ts`) Use for cases where a specific real-time delay is unavoidable.
-
-Always prefer `useAutoTick()` to keep tests efficient.

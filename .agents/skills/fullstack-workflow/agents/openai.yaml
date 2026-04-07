@@ -1,15 +1,15 @@
 interface:
-  display_name: "Fullstack Workflow"
-  short_description: "Coordinate Angular, Spring Boot, Nx, and Gradle changes"
-  brand_color: "#C65D2D"
-  default_prompt: "Use $fullstack-workflow to plan and validate coordinated Angular and Spring Boot changes."
+  display_name: 'Fullstack Workflow'
+  short_description: 'Coordinate Angular, Spring Boot, Nx, and Gradle changes'
+  brand_color: '#C65D2D'
+  default_prompt: 'Use $fullstack-workflow to plan and validate coordinated Angular and Spring Boot changes.'
 dependencies:
   tools:
-    - type: "mcp"
-      value: "nx_mcp"
-      description: "Nx MCP server"
-    - type: "mcp"
-      value: "angular_cli"
-      description: "Angular CLI MCP server"
+    - type: 'mcp'
+      value: 'nx_mcp'
+      description: 'Nx MCP server'
+    - type: 'mcp'
+      value: 'angular_cli'
+      description: 'Angular CLI MCP server'
 policy:
   allow_implicit_invocation: true

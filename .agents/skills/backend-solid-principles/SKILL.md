@@ -26,11 +26,13 @@ Use this skill as a coding and review checklist for Java/Groovy backend changes.
    - Use cases should depend on ports only, never on repository/client implementations.
 
 When applying SOLID, keep these outcomes measurable:
+
 - Smaller units with focused tests.
 - Reduced feature coupling across packages.
 - Fewer regressions when adding new behavior.
 
 Validation:
+
 - ADR check for architecture-impacting changes: update or create an ADR in `ADR/` via `write-adr`.
 - `pnpm run test:server:architecture`
 - `./gradlew :server:test`

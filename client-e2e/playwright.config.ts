@@ -24,7 +24,7 @@ export default defineConfig({
   },
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pnpm exec nx run client:serve --port=4300',
+    command: './scripts/pnpmw.sh nx run client:serve --port=4300',
     url: 'http://localhost:4300',
     reuseExistingServer: true,
     cwd: workspaceRoot,

@@ -1,9 +1,13 @@
 /dist
 /coverage
 /.gradle
+/.gradle-user
 /.nx/cache
 /.nx/workspace-data
-/angular
-/apps/api/build
+/.agents/skills
 /build
+/angular
+/pnpm-lock.yaml
+/skills-lock.json
+/server/src/test/resources/snapshots
 /gradle/wrapper/gradle-wrapper.jar
