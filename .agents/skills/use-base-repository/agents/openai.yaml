@@ -1,0 +1,6 @@
+interface:
+  display_name: 'Use Base Repository'
+  short_description: 'Follow the intended starter workflow, commands, and backend structure'
+  default_prompt: 'Use $use-base-repository to work in this starter with the correct onboarding flow, commands, validation steps, and backend package structure.'
+policy:
+  allow_implicit_invocation: true

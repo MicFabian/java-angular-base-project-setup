@@ -11,71 +11,66 @@ class CleanArchitectureRulesSpec extends Specification {
 
     private final importedClasses = new ClassFileImporter()
             .withImportOption(ImportOption.Predefined.DO_NOT_INCLUDE_TESTS)
-            .importPackages('com.example.baseproject.api.features')
+            .importPackages(
+                    'com.example.baseproject.api.controller',
+                    'com.example.baseproject.api.domain',
+                    'com.example.baseproject.api.accessor'
+            )
 
-    private final featureClassesMustLiveInALayerPackage = classes()
-            .that().resideInAPackage('..features..')
+    private final backendClassesMustLiveInAKnownRoot = classes()
             .should().resideInAnyPackage(
-                    '..features..domain..',
-                    '..features..application..',
-                    '..features..infrastructure..',
-                    '..features..presentation..'
+                    '..controller..',
+                    '..domain..',
+                    '..accessor..'
             )
 
-    private final domainMustNotDependOnFrameworkOrOuterLayers = noClasses()
-            .that().resideInAPackage('..features..domain..')
+    private final domainMustNotDependOnControllerOrAccessor = noClasses()
+            .that().resideInAPackage('..domain..')
             .should().dependOnClassesThat().resideInAnyPackage(
-                    '..features..application..',
-                    '..features..infrastructure..',
-                    '..features..presentation..',
+                    '..controller..',
+                    '..accessor..',
                     'org.springframework..',
                     'jakarta..'
             )
 
-    private final applicationMustNotDependOnFrameworkOrOuterLayers = noClasses()
-            .that().resideInAPackage('..features..application..')
-            .should().dependOnClassesThat().resideInAnyPackage(
-                    '..features..infrastructure..',
-                    '..features..presentation..',
-                    'org.springframework..',
-                    'jakarta..'
-            )
+    private final controllerMustNotDependOnAccessor = noClasses()
+            .that().resideInAPackage('..controller..')
+            .should().dependOnClassesThat().resideInAnyPackage('..accessor..')
 
-    private final presentationMustNotDependOnInfrastructure = noClasses()
-            .that().resideInAPackage('..features..presentation..')
-            .should().dependOnClassesThat().resideInAnyPackage('..features..infrastructure..')
+    private final accessorMustNotDependOnController = noClasses()
+            .that().resideInAPackage('..accessor..')
+            .should().dependOnClassesThat().resideInAnyPackage('..controller..')
 
-    private final infrastructureMustNotDependOnPresentation = noClasses()
-            .that().resideInAPackage('..features..infrastructure..')
-            .should().dependOnClassesThat().resideInAnyPackage('..features..presentation..')
+    private final controllersMustLiveInControllerRoot = classes()
+            .that().haveSimpleNameEndingWith('Controller')
+            .should().resideInAPackage('..controller..')
 
     private final noMultiPurposeServiceClassNames = noClasses()
-            .that().resideInAPackage('..features..')
             .should().haveSimpleNameEndingWith('Service')
 
-    def 'feature classes must live in a layer package'() {
+    def 'backend classes must live in a known root'() {
         expect:
-        featureClassesMustLiveInALayerPackage.check(importedClasses)
+        backendClassesMustLiveInAKnownRoot.check(importedClasses)
     }
 
-    def 'domain must not depend on framework or outer layers'() {
+    def 'domain must not depend on controller, accessor, or framework types'() {
         expect:
-        domainMustNotDependOnFrameworkOrOuterLayers.check(importedClasses)
+        domainMustNotDependOnControllerOrAccessor.check(importedClasses)
     }
 
-    def 'application must not depend on framework or outer layers'() {
+    def 'controller must not depend on accessor'() {
         expect:
-        applicationMustNotDependOnFrameworkOrOuterLayers.check(importedClasses)
+        controllerMustNotDependOnAccessor.check(importedClasses)
     }
 
-    def 'presentation must not depend on infrastructure'() {
+    def 'accessor must not depend on controller'() {
         expect:
-        presentationMustNotDependOnInfrastructure.check(importedClasses)
+        accessorMustNotDependOnController.check(importedClasses)
     }
 
-    def 'infrastructure must not depend on presentation'() {
+    def 'controllers must live in the controller root'() {
         expect:
-        infrastructureMustNotDependOnPresentation.check(importedClasses)
+        controllersMustLiveInControllerRoot.check(importedClasses)
     }
 
     def 'no multi-purpose service class names'() {

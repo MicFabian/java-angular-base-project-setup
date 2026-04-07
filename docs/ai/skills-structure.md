@@ -39,6 +39,7 @@ Each skill should follow:
 
 ## Local Standards Skills
 
+- `use-base-repository`
 - `backend-clean-architecture`
 - `backend-solid-principles`
 - `backend-programming-standards`

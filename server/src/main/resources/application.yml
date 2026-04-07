@@ -1,6 +1,6 @@
 spring:
   application:
-    name: base-project-api
+    name: ${app.info.name}
   datasource:
     url: jdbc:postgresql://${APP_DB_HOST:localhost}:${APP_DB_PORT:5432}/${APP_DB_NAME:base_project}
     username: ${APP_DB_USERNAME:base_project}
@@ -14,12 +14,16 @@ spring:
       file: docker/compose.yaml
 
 app:
-  version: 0.1.0-SNAPSHOT
+  info:
+    name: base-project-api
+    version: 0.1.0-SNAPSHOT
+    status: UP
 
 info:
   app:
-    name: ${spring.application.name}
-    version: ${app.version}
+    name: ${app.info.name}
+    version: ${app.info.version}
+    status: ${app.info.status}
 
 management:
   endpoints:

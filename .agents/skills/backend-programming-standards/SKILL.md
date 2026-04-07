@@ -8,7 +8,7 @@ description: Use when implementing or reviewing backend code in server and you n
 Apply these standards to all backend work in `server`.
 
 1. Naming and structure:
-   - Use explicit names (`*Controller`, `*UseCase`, `*Port`, `*Adapter`, `*Mapper`).
+   - Use explicit names (`*Controller`, `*UseCase`, `*Interactor`, `*Accessor`, `*Mapper`).
    - Keep methods small and intention-revealing.
    - Avoid generic `*Service` naming for orchestration classes; prefer use-case names.
 2. Validation and input handling:
@@ -21,9 +21,9 @@ Apply these standards to all backend work in `server`.
    - Structured, contextual logs for state transitions and failures.
    - Do not log secrets, tokens, credentials, or sensitive payloads.
 5. Persistence and transactions:
-   - Keep queries/adapters in infrastructure classes.
-   - Access infrastructure only through ports from the application layer.
-   - Keep transactional orchestration in the application/use-case layer.
+   - Keep database/client/config access in `accessor` classes.
+   - Access infrastructure only through domain-owned accessor interfaces.
+   - Keep business orchestration in the domain use-case/interactor layer.
    - Apply database changes through Flyway migrations, not ad hoc startup SQL.
 6. Security defaults:
    - Explicitly validate access assumptions.

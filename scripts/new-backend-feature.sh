@@ -17,7 +17,7 @@ RAW_FEATURE="$1"
 FEATURE="$(echo "$RAW_FEATURE" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/_/g; s/^_+|_+$//g')"
 
 if [[ -z "$FEATURE" ]]; then
-  echo "Feature name '$RAW_FEATURE' is invalid after normalization."
+  echo "Feature '$RAW_FEATURE' is invalid after normalization."
   exit 1
 fi
 
@@ -27,33 +27,24 @@ if [[ ! "$FEATURE" =~ ^[a-z][a-z0-9_]*$ ]]; then
 fi
 
 PACKAGE_PATH="$(package_to_path "$STARTER_JAVA_BASE_PACKAGE")"
-MAIN_BASE="server/src/main/java/$PACKAGE_PATH/api/features/$FEATURE"
-TEST_BASE="server/src/test/groovy/$PACKAGE_PATH/api/features/$FEATURE"
+MAIN_BASE="server/src/main/java/$PACKAGE_PATH/api"
+TEST_BASE="server/src/test/groovy/$PACKAGE_PATH/api"
 FEATURE_TITLE="$(derive_display_name "$FEATURE")"
 
-if [[ -d "$MAIN_BASE" ]]; then
-  echo "Feature '$FEATURE' already exists at $MAIN_BASE"
+if [[ -d "$MAIN_BASE/domain/$FEATURE" || -d "$MAIN_BASE/controller/$FEATURE" || -d "$MAIN_BASE/accessor/$FEATURE" ]]; then
+  echo "Feature '$FEATURE' already exists in one of the backend roots."
   exit 1
 fi
 
 MAIN_DIRS=(
-  "domain"
-  "application/port/in"
-  "application/port/out"
-  "application/usecase"
-  "infrastructure/config"
-  "infrastructure/persistence"
-  "infrastructure/client"
-  "presentation/rest"
-  "presentation/dto"
-  "presentation/mapper"
+  "controller/$FEATURE"
+  "domain/$FEATURE"
+  "accessor/$FEATURE"
 )
 
 TEST_DIRS=(
-  "unit"
-  "integration"
-  "contract"
-  "presentation/rest"
+  "controller/$FEATURE"
+  "domain/$FEATURE"
 )
 
 for dir in "${MAIN_DIRS[@]}"; do
@@ -66,22 +57,25 @@ for dir in "${TEST_DIRS[@]}"; do
   touch "$TEST_BASE/$dir/.gitkeep"
 done
 
-cat > "$MAIN_BASE/README.md" <<EOF
-# $FEATURE_TITLE Feature
+cat > "$MAIN_BASE/domain/$FEATURE/README.md" <<EOT
+# $FEATURE_TITLE Backend Slice
 
-Clean architecture structure:
-- domain: entities, value objects, domain rules
-- application: use cases and input/output ports
-- infrastructure: adapters for persistence and external systems
-- presentation: REST controllers, DTOs, and mappers
+Simple hexagonal structure:
+- controller/$FEATURE: inbound HTTP classes and transport DTOs
+- domain/$FEATURE: core model, use cases, and accessor interfaces
+- accessor/$FEATURE: Spring wiring and outbound implementations
 
 Rules:
-- Keep infrastructure communication behind output ports.
-- Use explicit *UseCase classes as entry points.
+- Keep Spring and infrastructure code out of domain/$FEATURE.
+- Keep controllers thin and map transport models explicitly.
+- Implement domain-owned accessor interfaces in accessor/$FEATURE.
 - Avoid generic *Service classes.
-EOF
+EOT
 
 echo "Created backend feature scaffold:"
-echo "  $MAIN_BASE"
-echo "  $TEST_BASE"
-echo "Next: implement ports/use cases and run ./gradlew :server:test"
+echo "  $MAIN_BASE/controller/$FEATURE"
+echo "  $MAIN_BASE/domain/$FEATURE"
+echo "  $MAIN_BASE/accessor/$FEATURE"
+echo "  $TEST_BASE/controller/$FEATURE"
+echo "  $TEST_BASE/domain/$FEATURE"
+echo "Next: implement the domain use case and accessor, then run ./gradlew :server:test"

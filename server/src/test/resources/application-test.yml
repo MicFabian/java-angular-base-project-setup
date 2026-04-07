@@ -7,6 +7,3 @@ spring:
   docker:
     compose:
       enabled: false
-
-app:
-  version: 0.1.0-SNAPSHOT

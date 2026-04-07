@@ -91,12 +91,12 @@ See [docs/starter/new-project.md](/Users/mivi/IdeaProjects/baseProject/docs/star
 
 ## Backend Base Structure
 
-Backend features follow package-by-feature clean architecture under:
+Backend code uses a simple hexagonal layout under:
 
-- `server/src/main/java/com/example/baseproject/api/features/<feature>/domain`
-- `server/src/main/java/com/example/baseproject/api/features/<feature>/application`
-- `server/src/main/java/com/example/baseproject/api/features/<feature>/infrastructure`
-- `server/src/main/java/com/example/baseproject/api/features/<feature>/presentation`
+- `server/src/main/java/com/example/baseproject/api/controller/<feature>`
+- `server/src/main/java/com/example/baseproject/api/domain/<feature>`
+- `server/src/main/java/com/example/baseproject/api/accessor/<feature>`
+- `server/src/main/java/com/example/baseproject/api/shared`
 
 Enforcement is provided by `CleanArchitectureRulesSpec` in:
 
@@ -104,11 +104,17 @@ Enforcement is provided by `CleanArchitectureRulesSpec` in:
 
 Key enforced rules:
 
-- domain must not depend on application/infrastructure/presentation or Spring
-- application must not depend on infrastructure/presentation or Spring
-- presentation must not depend on infrastructure
-- infrastructure must not depend on presentation
-- no backend class may end with `Service` (use `*UseCase`, `*Port`, `*Adapter`, etc.)
+- domain must not depend on controller/accessor or Spring
+- controller must not depend on accessor
+- accessor must not depend on controller
+- no backend class may end with `Service`
+
+Practical meaning:
+
+- `domain/<feature>` holds the model, use cases, and domain-owned accessor interfaces
+- `controller/<feature>` holds inbound HTTP controllers and transport DTOs
+- `accessor/<feature>` holds Spring wiring and outbound implementations of domain-owned accessor interfaces
+- `shared` holds cross-cutting support such as persistence bootstrapping
 
 ## Database and Operations Baseline
 

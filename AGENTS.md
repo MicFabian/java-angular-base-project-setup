@@ -3,7 +3,7 @@
 ## Structure
 
 - `client` contains the Angular frontend. Keep routing in `src/app/app.routes.ts` and feature code in `src/app/pages` or future `libs/web/*` libraries.
-- `server` contains the Spring Boot backend. Use package-by-feature under `src/main/java/com/example/baseproject/api` and place Spock specs in `src/test/groovy`.
+- `server` contains the Spring Boot backend. Use the backend roots `controller`, `domain`, `accessor`, and `shared` under `src/main/java/com/example/baseproject/api`, with feature names inside `controller/<feature>`, `domain/<feature>`, and `accessor/<feature>`. Place Spock specs in `src/test/groovy`.
 - `libs` is reserved for shared code. Use `libs/web/*` for Angular libraries and `libs/shared/*` for TypeScript-only contracts or utilities.
 - `ADR` stores architecture decision records. Use `ADR/0000-template.md` and naming `NNNN-short-kebab-title.md`.
 - `.starter/project-metadata.env` stores the current starter identity for renaming and scaffolding scripts.
@@ -28,9 +28,10 @@
 - For Boot 4 actuator setup, prefer endpoint access properties over legacy enable/disable flags.
 - For architectural changes, create or update an ADR in `ADR/` in the same turn.
 - Enforce clean architecture boundaries on backend changes:
-  - infrastructure communication must go through Ports/Adapters
+  - domain-owned accessor interfaces must mediate infrastructure communication
+  - keep the simple roots: `controller`, `domain`, `accessor`, `shared`
   - avoid generic multi-purpose `*Service` classes
-  - keep use cases/services single-purpose with one responsibility
+  - keep use cases/interactors single-purpose with one responsibility
   - preserve or extend `CleanArchitectureRulesSpec` when adding new backend patterns
 - `scripts/new-backend-feature.sh` must keep reading `.starter/project-metadata.env` so backend scaffolds follow the current Java base package.
 - Prefer `scripts/gradlew-local.sh` in repo automation so Gradle state stays inside `.gradle-user`.
