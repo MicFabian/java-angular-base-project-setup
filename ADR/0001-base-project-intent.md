@@ -26,10 +26,12 @@ Use this repository as a base project with the following baseline:
    - `server` uses Spring Boot + Gradle
    - `ADR/` stores architecture records
 2. Backend architecture:
-   - simple hexagonal roots: `controller`, `domain`, `accessor`, `shared`
-   - feature names live inside `controller/<feature>`, `domain/<feature>`, and `accessor/<feature>`
-   - infrastructure communication goes through domain-owned accessor interfaces
-   - avoid generic multi-purpose `*Service` classes
+   - roots: `controller`, `domain`, `accessor`, `config`, `shared`
+   - request/response DTOs live in `controller/<feature>/resources`
+   - domain may contain entities, Spring Data JPA repositories, and concrete use case/service classes
+   - `accessor` is reserved for third-party integrations
+   - Spring configuration lives in `config`
+   - Hibernate is enabled with validation only; schema changes go through Flyway
 3. AI-ready workspace:
    - `AGENTS.md`, scoped agent files, `llms.txt`, skills, and MCP config are part of the baseline
    - prefer deterministic commands and explicit repo rules over ad hoc agent behavior
@@ -50,8 +52,8 @@ Use this repository as a base project with the following baseline:
 
 This keeps the starter opinionated enough to remove repeated setup decisions, but small enough to stay readable.
 Nx is used where it clearly helps the frontend. Gradle stays standalone where that keeps backend complexity lower.
-The simplified backend roots reduce nesting while keeping dependency direction explicit.
-Domain-owned accessor interfaces, database migrations, integration tests, formatting, and agent guidance are treated as baseline engineering constraints rather than optional extras.
+The backend roots stay simple while making controller DTOs, domain logic, configuration, and external integrations visibly separate.
+Database migrations, Hibernate validation-only mode, integration tests, formatting, and agent guidance are treated as baseline engineering constraints rather than optional extras.
 
 ## Alternatives Considered
 

@@ -91,11 +91,13 @@ See [docs/starter/new-project.md](/Users/mivi/IdeaProjects/baseProject/docs/star
 
 ## Backend Base Structure
 
-Backend code uses a simple hexagonal layout under:
+Backend code uses these roots:
 
 - `server/src/main/java/com/example/baseproject/api/controller/<feature>`
+- `server/src/main/java/com/example/baseproject/api/controller/<feature>/resources`
 - `server/src/main/java/com/example/baseproject/api/domain/<feature>`
 - `server/src/main/java/com/example/baseproject/api/accessor/<feature>`
+- `server/src/main/java/com/example/baseproject/api/config/<feature>`
 - `server/src/main/java/com/example/baseproject/api/shared`
 
 Enforcement is provided by `CleanArchitectureRulesSpec` in:
@@ -104,25 +106,31 @@ Enforcement is provided by `CleanArchitectureRulesSpec` in:
 
 Key enforced rules:
 
-- domain must not depend on controller/accessor or Spring
-- controller must not depend on accessor
+- domain must not depend on controller/accessor/config
+- controller must not depend on accessor/config
 - accessor must not depend on controller
-- no backend class may end with `Service`
+- request/response/resource types must live under `controller/<feature>/resources`
 
 Practical meaning:
 
-- `domain/<feature>` holds the model, use cases, and domain-owned accessor interfaces
-- `controller/<feature>` holds inbound HTTP controllers and transport DTOs
-- `accessor/<feature>` holds Spring wiring and outbound implementations of domain-owned accessor interfaces
-- `shared` holds cross-cutting support such as persistence bootstrapping
+- `controller/<feature>` holds controllers
+- `controller/<feature>/resources` holds request and response DTOs
+- `domain/<feature>` holds entities, Spring Data JPA repositories, and concrete use case/service classes
+- `config/<feature>` holds Spring configuration and persistence/bootstrap wiring
+- `accessor/<feature>` is reserved for third-party integrations
+- `shared` holds cross-cutting support
+- Prefer Java records for immutable request/response DTOs and simple value objects. Keep JPA entities as classes.
 
 ## Database and Operations Baseline
 
 - Flyway migrations live in `server/src/main/resources/db/migration`
+- Hibernate/JPA is enabled, but schema generation is not. The backend uses `spring.jpa.hibernate.ddl-auto=validate`.
+- Spring Data JPA repositories for the application's own database live in `domain/<feature>`.
 - Spring Boot health probes are available at `/actuator/health/liveness` and `/actuator/health/readiness`
 - Actuator metadata is exposed at `/actuator/info`
 - OpenAPI docs stay available at `/v3/api-docs`
 - Backend Java formatting is enforced by Spotless with Palantir Java Format
+- Backend uses Lombok for constructor and value-object boilerplate
 - Test-only overrides live in `server/src/test/resources/application-test.yml` and `application-integration-test.yml` so the main runtime config stays authoritative
 - Boot 4 actuator configuration uses endpoint access properties instead of mixing legacy `enabled` flags with access settings
 - Backend snapshots use Snappo and are stored under `server/src/test/resources/snapshots`

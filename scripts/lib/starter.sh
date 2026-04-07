@@ -68,7 +68,7 @@ is_personalizable_text_file() {
 
 list_workspace_files() {
   if git -C "$ROOT_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    git -C "$ROOT_DIR" ls-files -z
+    git -C "$ROOT_DIR" ls-files -z --cached --others --exclude-standard
     return 0
   fi
 

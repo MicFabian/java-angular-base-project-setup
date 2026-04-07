@@ -18,7 +18,9 @@ Use this repository as a starter in four steps:
 - root project names in Gradle and `package.json`
 - display name in the Angular starter shell and tests
 - Java package paths under `server/src/main/java` and `server/src/test/groovy`
+- Java package paths under `server/src/test/java` when present
 - snapshot directories under `server/src/test/resources/snapshots`
+- starter ADR filenames that include the project slug
 - Spring application name
 - local PostgreSQL defaults in Docker, Spring config, and Testcontainers support
 - documentation references that should follow the new project identity

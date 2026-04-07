@@ -16,6 +16,8 @@ Nearest-scope instructions win over broader instructions.
 - Angular `21.2.x` + Nx `22.x` (`client`, `client-e2e`)
 - Node.js `22.15.x` for frontend tooling and builds
 - Spring Boot `4.0.4` + Gradle + Java toolchain `21` (`server`)
+- Hibernate/JPA with validation-only schema management plus Flyway migrations
+- Lombok for backend boilerplate reduction
 - Flyway migrations and dedicated Testcontainers-backed integration tests for the backend
 - Spock/Groovy test structure in `server/src/test/groovy`
 - Snappo snapshot testing for committed backend snapshots
@@ -23,10 +25,12 @@ Nearest-scope instructions win over broader instructions.
 
 ## Architecture Constraints
 
-- Backend uses clean architecture by feature.
-- Infrastructure communication must go through Ports/Adapters.
-- Avoid generic multi-purpose `*Service` classes.
-- Keep use cases single-purpose.
+- Backend uses the roots `controller`, `domain`, `accessor`, `config`, and `shared`.
+- Request/response DTOs live under `controller/<feature>/resources`.
+- Domain may contain entities, Spring Data JPA repositories, and concrete use case/service classes.
+- `accessor` is reserved for third-party integrations.
+- `config` contains Spring configuration and persistence/bootstrap wiring.
+- Hibernate must not manage schema creation or updates.
 - Create/update ADRs for architecture-impacting decisions.
 
 ## Skill System

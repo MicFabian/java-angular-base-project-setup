@@ -31,15 +31,16 @@ MAIN_BASE="server/src/main/java/$PACKAGE_PATH/api"
 TEST_BASE="server/src/test/groovy/$PACKAGE_PATH/api"
 FEATURE_TITLE="$(derive_display_name "$FEATURE")"
 
-if [[ -d "$MAIN_BASE/domain/$FEATURE" || -d "$MAIN_BASE/controller/$FEATURE" || -d "$MAIN_BASE/accessor/$FEATURE" ]]; then
+if [[ -d "$MAIN_BASE/domain/$FEATURE" || -d "$MAIN_BASE/controller/$FEATURE" || -d "$MAIN_BASE/accessor/$FEATURE" || -d "$MAIN_BASE/config/$FEATURE" ]]; then
   echo "Feature '$FEATURE' already exists in one of the backend roots."
   exit 1
 fi
 
 MAIN_DIRS=(
-  "controller/$FEATURE"
+  "controller/$FEATURE/resources"
   "domain/$FEATURE"
   "accessor/$FEATURE"
+  "config/$FEATURE"
 )
 
 TEST_DIRS=(
@@ -61,21 +62,27 @@ cat > "$MAIN_BASE/domain/$FEATURE/README.md" <<EOT
 # $FEATURE_TITLE Backend Slice
 
 Simple hexagonal structure:
-- controller/$FEATURE: inbound HTTP classes and transport DTOs
-- domain/$FEATURE: core model, use cases, and accessor interfaces
-- accessor/$FEATURE: Spring wiring and outbound implementations
+- controller/$FEATURE: controllers for the feature
+- controller/$FEATURE/resources: request and response DTOs
+- domain/$FEATURE: core model, JPA entities, Spring Data repositories, and use case/service classes
+- config/$FEATURE: Spring configuration and persistence/bootstrap wiring
+- accessor/$FEATURE: third-party integrations only
 
 Rules:
-- Keep Spring and infrastructure code out of domain/$FEATURE.
-- Keep controllers thin and map transport models explicitly.
-- Implement domain-owned accessor interfaces in accessor/$FEATURE.
-- Avoid generic *Service classes.
+- Keep request/response DTOs under controller/$FEATURE/resources.
+- Keep controllers thin and delegate business flow to domain/$FEATURE.
+- Keep JPA entities and Spring Data repositories for the application's own database in domain/$FEATURE.
+- Put Spring configuration into config/$FEATURE.
+- Reserve accessor/$FEATURE for third-party integrations.
+- Hibernate is allowed, but schema changes must go through Flyway migrations.
 EOT
 
 echo "Created backend feature scaffold:"
 echo "  $MAIN_BASE/controller/$FEATURE"
+echo "  $MAIN_BASE/controller/$FEATURE/resources"
 echo "  $MAIN_BASE/domain/$FEATURE"
 echo "  $MAIN_BASE/accessor/$FEATURE"
+echo "  $MAIN_BASE/config/$FEATURE"
 echo "  $TEST_BASE/controller/$FEATURE"
 echo "  $TEST_BASE/domain/$FEATURE"
-echo "Next: implement the domain use case and accessor, then run ./gradlew :server:test"
+echo "Next: implement the domain entity/repository/use case, add controller/resources, wire config/accessor pieces only when needed, then run ./gradlew :server:test"

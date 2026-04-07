@@ -30,17 +30,21 @@ dependencies {
     testImplementation platform('org.springframework.boot:spring-boot-dependencies:4.0.4')
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation libs.spring.boot.starter.data.jpa
+    implementation 'org.springframework.boot:spring-boot-flyway'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation libs.flyway.core
     implementation libs.flyway.postgresql
+    compileOnly libs.lombok
+    annotationProcessor libs.lombok
     implementation libs.springdoc.webmvc.ui
     runtimeOnly 'org.postgresql:postgresql'
 
     testImplementation platform(libs.spock.bom)
     testImplementation libs.snappo
     testImplementation libs.spring.boot.testcontainers
+    testImplementation 'org.springframework.boot:spring-boot-data-jpa-test'
     testImplementation libs.spock.core
     testImplementation libs.spock.spring
     testImplementation libs.testcontainers.postgresql
@@ -51,6 +55,8 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-webmvc-test') {
         exclude group: 'org.mockito'
     }
+    testCompileOnly libs.lombok
+    testAnnotationProcessor libs.lombok
     testRuntimeOnly 'com.h2database:h2'
 }
 

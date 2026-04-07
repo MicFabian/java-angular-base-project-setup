@@ -12,14 +12,17 @@
 1. Prefer existing repository commands over ad hoc scripts.
 2. Frontend work uses Node `22.15.x` with `pnpm nx ...`; backend work uses `./scripts/gradlew-local.sh ...` or `./gradlew ...`.
 3. Backend architecture rules are strict:
-   - use package-by-feature
-   - use Ports/Adapters for infrastructure communication
-   - avoid generic multi-purpose `*Service` classes
-4. Use Flyway for backend schema changes and `:server:integrationTest` for Docker-backed backend verification.
+   - use `controller`, `domain`, `accessor`, `config`, and `shared`
+   - put request/response DTOs under `controller/<feature>/resources`
+   - keep JPA entities, Spring Data repositories, and concrete use case/service classes in `domain`
+   - reserve `accessor` for third-party integrations
+   - keep Spring configuration in `config`
+4. Use Hibernate/JPA with validation-only schema management and Flyway for backend schema changes.
 5. Use Spock/Groovy for backend tests; for committed backend snapshots use Snappo and update them with `./gradlew :server:updateSnapshots`.
-6. Use Prettier for frontend/docs files and Spotless with Palantir Java Format for backend Java sources.
-7. If architecture direction changes, update/create an ADR in `ADR/`.
-8. Keep API changes synchronized across frontend and backend in the same change.
+6. Use Lombok for constructor and value-object boilerplate when it reduces noise.
+7. Use Prettier for frontend/docs files and Spotless with Palantir Java Format for backend Java sources.
+8. If architecture direction changes, update/create an ADR in `ADR/`.
+9. Keep API changes synchronized across frontend and backend in the same change.
 
 ## Minimum Validation
 

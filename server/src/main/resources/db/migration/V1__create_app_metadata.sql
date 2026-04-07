@@ -5,4 +5,7 @@ CREATE TABLE app_metadata (
 );
 
 INSERT INTO app_metadata (metadata_key, metadata_value)
-VALUES ('schema.baseline', '1');
+VALUES ('schema.baseline', '1'),
+       ('app.name', 'base-project-api'),
+       ('app.version', '0.1.0-SNAPSHOT'),
+       ('app.status', 'UP');

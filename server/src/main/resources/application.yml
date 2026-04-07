@@ -1,29 +1,27 @@
 spring:
   application:
-    name: ${app.info.name}
+    name: base-project-api
   datasource:
     url: jdbc:postgresql://${APP_DB_HOST:localhost}:${APP_DB_PORT:5432}/${APP_DB_NAME:base_project}
     username: ${APP_DB_USERNAME:base_project}
     password: ${APP_DB_PASSWORD:base_project}
     driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
   flyway:
     enabled: true
+    locations:
+      - classpath:db/migration
   docker:
     compose:
       enabled: true
       file: docker/compose.yaml
-
-app:
-  info:
-    name: base-project-api
-    version: 0.1.0-SNAPSHOT
-    status: UP
-
-info:
-  app:
-    name: ${app.info.name}
-    version: ${app.info.version}
-    status: ${app.info.status}
 
 management:
   endpoints:

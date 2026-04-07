@@ -55,6 +55,10 @@ replace_across_tracked_text_files() {
   fi
 
   while IFS= read -r -d '' file; do
+    if [[ ! -f "$file" ]]; then
+      continue
+    fi
+
     local relative_file="${file#$ROOT_DIR/}"
 
     if is_personalizable_text_file "$relative_file"; then
@@ -76,6 +80,20 @@ move_package_tree() {
   local new_path="$source_root/$(package_to_path "$new_package")"
 
   if [[ -d "$old_path" ]]; then
+    mkdir -p "$(dirname "$new_path")"
+    mv "$old_path" "$new_path"
+  fi
+}
+
+move_if_exists() {
+  local old_path="$1"
+  local new_path="$2"
+
+  if [[ "$old_path" == "$new_path" ]]; then
+    return 0
+  fi
+
+  if [[ -e "$old_path" ]]; then
     mkdir -p "$(dirname "$new_path")"
     mv "$old_path" "$new_path"
   fi
@@ -188,7 +206,11 @@ fi
 
 move_package_tree "$ROOT_DIR/server/src/main/java" "$STARTER_JAVA_BASE_PACKAGE" "$NEW_JAVA_BASE_PACKAGE"
 move_package_tree "$ROOT_DIR/server/src/test/groovy" "$STARTER_JAVA_BASE_PACKAGE" "$NEW_JAVA_BASE_PACKAGE"
+move_package_tree "$ROOT_DIR/server/src/test/java" "$STARTER_JAVA_BASE_PACKAGE" "$NEW_JAVA_BASE_PACKAGE"
 move_package_tree "$ROOT_DIR/server/src/test/resources/snapshots" "$STARTER_JAVA_BASE_PACKAGE" "$NEW_JAVA_BASE_PACKAGE"
+move_if_exists \
+  "$ROOT_DIR/ADR/0001-$STARTER_PROJECT_NAME-intent.md" \
+  "$ROOT_DIR/ADR/0001-$NEW_PROJECT_NAME-intent.md"
 
 replace_across_tracked_text_files "$STARTER_SERVER_APP_NAME" "$NEW_SERVER_APP_NAME"
 replace_across_tracked_text_files "$STARTER_DB_CONTAINER_NAME" "$NEW_DB_CONTAINER_NAME"

@@ -2,6 +2,7 @@ package com.example.baseproject.api.architecture
 
 import com.tngtech.archunit.core.importer.ClassFileImporter
 import com.tngtech.archunit.core.importer.ImportOption
+import jakarta.persistence.Entity
 import spock.lang.Specification
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes
@@ -14,53 +15,68 @@ class CleanArchitectureRulesSpec extends Specification {
             .importPackages(
                     'com.example.baseproject.api.controller',
                     'com.example.baseproject.api.domain',
-                    'com.example.baseproject.api.accessor'
+                    'com.example.baseproject.api.accessor',
+                    'com.example.baseproject.api.config',
+                    'com.example.baseproject.api.shared'
             )
 
     private final backendClassesMustLiveInAKnownRoot = classes()
             .should().resideInAnyPackage(
                     '..controller..',
                     '..domain..',
-                    '..accessor..'
+                    '..accessor..',
+                    '..config..',
+                    '..shared..'
             )
 
-    private final domainMustNotDependOnControllerOrAccessor = noClasses()
+    private final domainMustNotDependOnControllerAccessorOrConfig = noClasses()
             .that().resideInAPackage('..domain..')
             .should().dependOnClassesThat().resideInAnyPackage(
                     '..controller..',
                     '..accessor..',
-                    'org.springframework..',
-                    'jakarta..'
+                    '..config..'
             )
 
-    private final controllerMustNotDependOnAccessor = noClasses()
+    private final controllerMustNotDependOnAccessorOrConfig = noClasses()
             .that().resideInAPackage('..controller..')
-            .should().dependOnClassesThat().resideInAnyPackage('..accessor..')
+            .should().dependOnClassesThat().resideInAnyPackage('..accessor..', '..config..')
 
     private final accessorMustNotDependOnController = noClasses()
             .that().resideInAPackage('..accessor..')
             .should().dependOnClassesThat().resideInAnyPackage('..controller..')
+            .allowEmptyShould(true)
 
     private final controllersMustLiveInControllerRoot = classes()
             .that().haveSimpleNameEndingWith('Controller')
             .should().resideInAPackage('..controller..')
 
-    private final noMultiPurposeServiceClassNames = noClasses()
-            .should().haveSimpleNameEndingWith('Service')
+    private final transportResourcesMustLiveUnderControllerResources = classes()
+            .that().haveSimpleNameEndingWith('Request')
+            .or().haveSimpleNameEndingWith('Response')
+            .or().haveSimpleNameEndingWith('Resource')
+            .should().resideInAPackage('..controller..resources..')
+
+    private final repositoriesMustLiveInDomainRoot = classes()
+            .that().haveSimpleNameEndingWith('Repository')
+            .should().resideInAPackage('..domain..')
+
+    private final jpaEntitiesMustLiveInDomainRoot = classes()
+            .that().areAnnotatedWith(Entity)
+            .should().resideInAPackage('..domain..')
 
     def 'backend classes must live in a known root'() {
         expect:
         backendClassesMustLiveInAKnownRoot.check(importedClasses)
     }
 
-    def 'domain must not depend on controller, accessor, or framework types'() {
+    def 'domain must not depend on controller accessor or config'() {
         expect:
-        domainMustNotDependOnControllerOrAccessor.check(importedClasses)
+        domainMustNotDependOnControllerAccessorOrConfig.check(importedClasses)
     }
 
-    def 'controller must not depend on accessor'() {
+    def 'controller must not depend on accessor or config'() {
         expect:
-        controllerMustNotDependOnAccessor.check(importedClasses)
+        controllerMustNotDependOnAccessorOrConfig.check(importedClasses)
     }
 
     def 'accessor must not depend on controller'() {
@@ -73,8 +89,18 @@ class CleanArchitectureRulesSpec extends Specification {
         controllersMustLiveInControllerRoot.check(importedClasses)
     }
 
-    def 'no multi-purpose service class names'() {
+    def 'transport resources must live under controller resources'() {
         expect:
-        noMultiPurposeServiceClassNames.check(importedClasses)
+        transportResourcesMustLiveUnderControllerResources.check(importedClasses)
+    }
+
+    def 'repositories must live in the domain root'() {
+        expect:
+        repositoriesMustLiveInDomainRoot.check(importedClasses)
+    }
+
+    def 'JPA entities must live in the domain root'() {
+        expect:
+        jpaEntitiesMustLiveInDomainRoot.check(importedClasses)
     }
 }
